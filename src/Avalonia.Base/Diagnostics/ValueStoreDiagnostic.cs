@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
+using Avalonia.Metadata;
 using Avalonia.Styling;
 
 namespace Avalonia.Diagnostics;
 
-public class ValueStoreDiagnostic
+[PrivateApi]
+public sealed class ValueStoreDiagnostic(IReadOnlyList<IValueFrameDiagnostic> appliedFrames)
 {
     /// <summary>
     /// Currently applied frames.
     /// </summary>
-    public IReadOnlyList<IValueFrameDiagnostic> AppliedFrames { get; }
-
-    internal ValueStoreDiagnostic(IReadOnlyList<IValueFrameDiagnostic> appliedFrames)
-    {
-        AppliedFrames = appliedFrames;
-    }
+    public IReadOnlyList<IValueFrameDiagnostic> AppliedFrames { get; } = appliedFrames;
 }

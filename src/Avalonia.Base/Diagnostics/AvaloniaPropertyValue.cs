@@ -1,4 +1,5 @@
 using Avalonia.Data;
+using Avalonia.Metadata;
 
 namespace Avalonia.Diagnostics
 {
@@ -6,6 +7,7 @@ namespace Avalonia.Diagnostics
     /// Holds diagnostic-related information about the value of an <see cref="AvaloniaProperty"/>
     /// on an <see cref="AvaloniaObject"/>.
     /// </summary>
+    [PrivateApi]
     public sealed class AvaloniaPropertyValue
     {
         internal AvaloniaPropertyValue(
