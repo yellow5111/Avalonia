@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Avalonia.Media;
 using Avalonia.Platform;
 
@@ -22,4 +23,10 @@ class RenderDataOpacityMaskNode : RenderDataPushNode, IRenderDataItemWithServerR
 
     public override void Pop(ref RenderDataNodeRenderContext context) =>
         context.Context.PopOpacityMask();
+
+    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(BoundsRect)] = BoundsRect;
+        properties[nameof(ServerBrush)] = ServerBrush?.ToString();
+    }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Avalonia.Media;
 using Avalonia.Platform;
 
@@ -58,4 +59,10 @@ class RenderDataEllipseNode :RenderDataBrushAndPenNode
         context.Context.DrawEllipse(ServerBrush, ServerPen, Rect);
 
     public override Rect? Bounds => Rect.Inflate(ServerPen?.Thickness ?? 0);
+
+    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        base.PopulateDiagnosticProperties(properties);
+        properties[nameof(Rect)] = Rect;
+    }
 }

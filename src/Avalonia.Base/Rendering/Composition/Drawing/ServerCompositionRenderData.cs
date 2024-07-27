@@ -22,6 +22,9 @@ class ServerCompositionRenderData : SimpleServerRenderResource
     {
     }
 
+    public IReadOnlyCollection<IRenderDataItem> Items => _items;
+    public IReadOnlyCollection<IServerRenderResource> ReferencedResources => _referencedResources;
+
     class Collector : IRenderDataServerResourcesCollector
     {
         public readonly HashSet<IServerRenderResource> Resources = new();

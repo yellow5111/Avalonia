@@ -53,6 +53,10 @@ namespace Avalonia.Rendering.Composition.Server
             _animations?.OnSetDirectValue(prop);
         }
 
+        public virtual void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+        {
+        }
+
         protected void SetAnimatedValue<T>(CompositionProperty<T> prop, ref T field,
             TimeSpan committedAt, IAnimationInstance animation) where T : struct
         {

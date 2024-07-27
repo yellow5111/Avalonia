@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -31,5 +32,12 @@ class RenderDataGlyphRunNode : IRenderDataItemWithServerResources, IDisposable
     {
         GlyphRun?.Dispose();
         GlyphRun = null;
+    }
+
+    public void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(Bounds)] = Bounds;
+        properties[nameof(GlyphRun)] = GlyphRun?.Item.ToString();
+        properties[nameof(ServerBrush)] = ServerBrush;
     }
 }

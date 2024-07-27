@@ -7,7 +7,7 @@ using Avalonia.Rendering.Composition.Server;
 
 namespace Avalonia.Utilities;
 
-internal struct PooledInlineList<T> : IDisposable, IEnumerable<T> where T : class
+internal struct PooledInlineList<T> : IDisposable, IReadOnlyCollection<T> where T : class
 {
     private object? _item;
 

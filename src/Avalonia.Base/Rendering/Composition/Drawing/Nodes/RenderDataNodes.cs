@@ -60,12 +60,12 @@ interface IRenderDataItem
     /// </summary>
     /// <param name="context">The drawing context.</param>
     void Invoke(ref RenderDataNodeRenderContext context);
-    
+
     /// <summary>
     /// Gets the bounds of the visible content in the node in global coordinates.
     /// </summary>
     Rect? Bounds { get; }
-    
+
     /// <summary>
     /// Hit test the geometry in this node.
     /// </summary>
@@ -76,12 +76,15 @@ interface IRenderDataItem
     /// to hit test children they must be hit tested manually.
     /// </remarks>
     bool HitTest(Point p);
+
+    void PopulateDiagnosticProperties(Dictionary<string, object?> properties);
 }
 
 class RenderDataCustomNode : IRenderDataItem, IDisposable
 {
     public ICustomDrawOperation? Operation { get; set; }
     public bool HitTest(Point p) => Operation?.HitTest(p) ?? false;
+
     public void Invoke(ref RenderDataNodeRenderContext context) => Operation?.Render(new(context.Context, false));
 
     public Rect? Bounds => Operation?.Bounds;
@@ -90,6 +93,12 @@ class RenderDataCustomNode : IRenderDataItem, IDisposable
     {
         Operation?.Dispose();
         Operation = null;
+    }
+
+    public void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(Operation)] = Operation?.ToString();
+        properties[nameof(Bounds)] = Bounds;
     }
 }
 
@@ -141,6 +150,8 @@ abstract class RenderDataPushNode : IRenderDataItem, IDisposable
             Children.Dispose();
         }
     }
+
+    public abstract void PopulateDiagnosticProperties(Dictionary<string, object?> properties);
 }
 
 class RenderDataClipNode : RenderDataPushNode
@@ -157,6 +168,11 @@ class RenderDataClipNode : RenderDataPushNode
         if (!Rect.Rect.Contains(p))
             return false;
         return base.HitTest(p);
+    }
+
+    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(Rect)] = Rect;
     }
 }
 
@@ -183,6 +199,11 @@ class RenderDataGeometryClipNode : RenderDataPushNode
             return false;
         return base.HitTest(p);
     }
+
+    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(Geometry)] = Geometry?.ToString();
+    }
 }
 
 class RenderDataOpacityNode : RenderDataPushNode
@@ -198,6 +219,11 @@ class RenderDataOpacityNode : RenderDataPushNode
     {
         if (Opacity != 1)
             context.Context.PopOpacity();
+    }
+
+    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(Opacity)] = Opacity;
     }
 }
 
@@ -216,6 +242,13 @@ abstract class RenderDataBrushAndPenNode : IRenderDataItemWithServerResources
     public abstract void Invoke(ref RenderDataNodeRenderContext context);
     public abstract Rect? Bounds { get; }
     public abstract bool HitTest(Point p);
+
+    public virtual void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(Bounds)] = Bounds;
+        properties[nameof(ServerPen)] = ServerPen?.ToString();
+        properties[nameof(ServerBrush)] = ServerBrush?.ToString();
+    }
 }
 
 class RenderDataRenderOptionsNode : RenderDataPushNode
@@ -230,5 +263,10 @@ class RenderDataRenderOptionsNode : RenderDataPushNode
     public override void Pop(ref RenderDataNodeRenderContext context)
     {
         context.Context.PopRenderOptions();
+    }
+
+    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
+    {
+        properties[nameof(RenderOptions)] = RenderOptions;
     }
 }

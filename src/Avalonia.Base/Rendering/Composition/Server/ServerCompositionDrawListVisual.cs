@@ -27,6 +27,7 @@ internal class ServerCompositionDrawListVisual : ServerCompositionContainerVisua
 #endif
     }
 
+    public ServerCompositionRenderData? RenderData => _renderCommands;
     public override LtrbRect OwnContentBounds => _renderCommands?.Bounds ?? default;
 
     protected override void DeserializeChangesCore(BatchStreamReader reader, TimeSpan committedAt)
