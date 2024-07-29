@@ -69,7 +69,9 @@ public class CompositionTreeSnapshotItem
         _snapshot = snapshot;
         Name = visual.GetType().Name;
 
-        if ((visual as ServerCompositionDrawListVisual)?.RenderData?.Items is { } renderDataItems)
+        if ((visual as ServerCompositionDrawListVisual)?.RenderData?.Items is { } renderDataItems
+            && visual.Size.X > 0
+            && visual.Size.Y > 0)
         {
             _renderTargetBitmap = new RenderTargetBitmap(new PixelSize((int)visual.Size.X, (int)visual.Size.Y));
             using (var impl = _renderTargetBitmap.PlatformImpl.Item.CreateDrawingContext(true))

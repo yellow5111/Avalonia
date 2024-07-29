@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.Media.Immutable;
+using Avalonia.Rendering.Composition.Server;
 
 namespace Avalonia.Media
 {
@@ -18,9 +19,13 @@ namespace Avalonia.Media
         /// </returns>
         public static IImmutableBrush ToImmutable(this IBrush brush)
         {
-            _ = brush ?? throw new ArgumentNullException(nameof(brush));
-
-            return (brush as IMutableBrush)?.ToImmutable() ?? (IImmutableBrush)brush;
+            return brush switch
+            {
+                IImmutableBrush immutableBrush => immutableBrush,
+                IMutableBrush mutableBrush => mutableBrush.ToImmutable(),
+                null => throw new ArgumentNullException(nameof(brush)),
+                _ => throw new ArgumentOutOfRangeException(nameof(brush))
+            };
         }
 
         /// <summary>
@@ -33,9 +38,13 @@ namespace Avalonia.Media
         /// </returns>
         public static ImmutableDashStyle ToImmutable(this IDashStyle style)
         {
-            _ = style ?? throw new ArgumentNullException(nameof(style));
-
-            return style as ImmutableDashStyle ?? ((DashStyle)style).ToImmutable();
+            return style switch
+            {
+                DashStyle dashStyle => dashStyle.ToImmutable(),
+                ImmutableDashStyle immutableDashStyle => immutableDashStyle,
+                null => throw new ArgumentNullException(nameof(style)),
+                _ => throw new ArgumentOutOfRangeException(nameof(style))
+            };
         }
 
         /// <summary>
@@ -48,9 +57,14 @@ namespace Avalonia.Media
         /// </returns>
         public static ImmutablePen ToImmutable(this IPen pen)
         {
-            _ = pen ?? throw new ArgumentNullException(nameof(pen));
-
-            return pen as ImmutablePen ?? ((Pen)pen).ToImmutable();
+            return pen switch
+            {
+                ImmutablePen immutablePen => immutablePen,
+                Pen clientPen => clientPen.ToImmutable(),
+                ServerCompositionSimplePen serverPen => serverPen.ToImmutable(),
+                null => throw new ArgumentNullException(nameof(pen)),
+                _ => throw new ArgumentOutOfRangeException(nameof(pen))
+            };
         }
     }
 }

@@ -9,14 +9,15 @@ using Avalonia.Rendering.Composition.Transport;
 
 namespace Avalonia.Rendering.Composition.Server
 {
-    internal partial class ServerCompositionSimpleBrush : IBrush
+    internal abstract partial class ServerCompositionSimpleBrush : IBrush
     {
         ITransform? IBrush.Transform => Transform;
     }
 
-    internal class ServerCompositionSimpleGradientBrush : ServerCompositionSimpleBrush, IGradientBrush
+    internal abstract class ServerCompositionSimpleGradientBrush : ServerCompositionSimpleBrush, IGradientBrush, IMutableBrush
     {
-        
+        public abstract IImmutableBrush ToImmutable();
+
         internal ServerCompositionSimpleGradientBrush(ServerCompositor compositor) : base(compositor)
         {
             
@@ -37,25 +38,42 @@ namespace Avalonia.Rendering.Composition.Server
         }
     }
 
-    partial class ServerCompositionSimpleConicGradientBrush : IConicGradientBrush
+    partial class ServerCompositionSimpleConicGradientBrush : IConicGradientBrush, IMutableBrush
     {
-        
+        public override IImmutableBrush ToImmutable()
+        {
+            return new ImmutableConicGradientBrush(
+                Avalonia.Media.GradientStops.AsImmutable(GradientStops), Opacity, Transform?.ToImmutable(), TransformOrigin,
+                SpreadMethod, Center, Angle);
+        }
     }
     
-    partial class ServerCompositionSimpleLinearGradientBrush : ILinearGradientBrush
+    partial class ServerCompositionSimpleLinearGradientBrush : ILinearGradientBrush, IMutableBrush
     {
-        
+        public override IImmutableBrush ToImmutable()
+        {
+            return new ImmutableLinearGradientBrush(
+                Avalonia.Media.GradientStops.AsImmutable(GradientStops), Opacity, Transform?.ToImmutable(), TransformOrigin,
+                SpreadMethod, StartPoint, EndPoint);
+        }
     }
     
-    partial class ServerCompositionSimpleRadialGradientBrush : IRadialGradientBrush
+    partial class ServerCompositionSimpleRadialGradientBrush : IRadialGradientBrush, IMutableBrush
     {
         public double Radius => RadiusX.Scalar;
+        public override IImmutableBrush ToImmutable()
+        {
+            return new ImmutableRadialGradientBrush(
+                Avalonia.Media.GradientStops.AsImmutable(GradientStops), Opacity, Transform?.ToImmutable(), TransformOrigin,
+                SpreadMethod, Center, GradientOrigin, Radius);
+        }
     }
     
-    partial class ServerCompositionSimpleSolidColorBrush : ISolidColorBrush
+    partial class ServerCompositionSimpleSolidColorBrush : ISolidColorBrush, IMutableBrush
     {
-        
+        public IImmutableBrush ToImmutable()
+        {
+            return new ImmutableSolidColorBrush(Color, Opacity, Transform?.ToImmutable());
+        }
     }
-    
-    
 }

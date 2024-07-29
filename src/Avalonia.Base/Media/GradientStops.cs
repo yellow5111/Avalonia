@@ -17,7 +17,18 @@ namespace Avalonia.Media
 
         public IReadOnlyList<ImmutableGradientStop> ToImmutable()
         {
-            return this.Select(x => new ImmutableGradientStop(x.Offset, x.Color)).ToArray();
+            return AsImmutable(this);
+        }
+
+        internal static IReadOnlyList<ImmutableGradientStop> AsImmutable(IReadOnlyList<IGradientStop> stops)
+        {
+            var immutableGradientStops = new ImmutableGradientStop[stops.Count];
+            for (int i = 0; i < stops.Count; i++)
+            {
+                var stop = stops[i];
+                immutableGradientStops[i] = new ImmutableGradientStop(stop.Offset, stop.Color);
+            }
+            return immutableGradientStops;
         }
     }
 }
