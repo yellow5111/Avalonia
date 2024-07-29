@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Diagnostics.ViewModels;
 using Avalonia.Diagnostics.Views;
 using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Interactivity;
 using Avalonia.Reactive;
+using Avalonia.Rendering.Composition;
 
 namespace Avalonia.Diagnostics
 {
-    internal static class DevTools
+    public static class DevTools
     {
         private static readonly Dictionary<IDevToolsTopLevelGroup, MainWindow> s_open = new();
 
@@ -161,6 +163,38 @@ namespace Avalonia.Diagnostics
                 }
             }
             return true;
+        }
+
+        public static async void ShowCompositionSnapshot(TopLevel tl)
+        {
+            var visual = ElementComposition.GetElementVisual(tl);
+            if (visual == null)
+                return;
+            
+            var snapshot = await CompositionTreeSnapshot.TakeAsync(visual);
+            
+            if (snapshot == null)
+                return;
+
+            new Window
+            {
+                Content = new CompositionTreeSnapshotView
+                {
+                    DataContext = new CompositionTreeSnapshotViewModel(tl, snapshot)
+                }
+            }.Show();
+        }
+        
+        public static void AttachCompositionSnapshot(TopLevel tl)
+        {
+            tl.AddHandler(InputElement.KeyDownEvent, (_, e) =>
+            {
+                if (e.Key == Key.F11)
+                {
+                    ShowCompositionSnapshot(tl);
+                    e.Handled = true;
+                }
+            }, RoutingStrategies.Tunnel);
         }
     }
 }

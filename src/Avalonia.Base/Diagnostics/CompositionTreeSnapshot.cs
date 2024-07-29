@@ -50,6 +50,11 @@ public class CompositionTreeSnapshot
             return new CompositionTreeSnapshot(visual.Compositor, visual.Server);
         });
     }
+
+    public CompositionTreeSnapshotItem? HitTest(Point pos)
+    {
+        return null!;
+    }
 }
 
 [PrivateApi]
