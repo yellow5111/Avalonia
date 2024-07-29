@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Avalonia.Media;
 
 namespace Avalonia.Rendering.Composition.Drawing.Nodes;
@@ -44,11 +43,4 @@ class RenderDataRectangleNode : RenderDataBrushAndPenNode
         context.Context.DrawRectangle(ServerBrush, ServerPen, Rect, BoxShadows);
 
     public override Rect? Bounds => BoxShadows.TransformBounds(Rect.Rect).Inflate((ServerPen?.Thickness ?? 0) / 2);
-
-    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
-    {
-        base.PopulateDiagnosticProperties(properties);
-        properties[nameof(Rect)] = Rect;
-        properties[nameof(BoxShadows)] = BoxShadows;
-    }
 }

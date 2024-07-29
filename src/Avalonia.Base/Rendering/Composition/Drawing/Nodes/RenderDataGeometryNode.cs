@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Diagnostics;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -27,10 +26,4 @@ class RenderDataGeometryNode : RenderDataBrushAndPenNode
     }
 
     public override Rect? Bounds => Geometry?.GetRenderBounds(ServerPen) ?? default;
-
-    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
-    {
-        base.PopulateDiagnosticProperties(properties);
-        properties[nameof(Geometry)] = Geometry?.ToString();
-    }
 }

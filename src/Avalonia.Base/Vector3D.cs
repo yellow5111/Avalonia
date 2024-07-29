@@ -6,7 +6,7 @@ using Avalonia.Utilities;
 
 namespace Avalonia;
 
-public readonly record struct Vector3D(double X, double Y, double Z)
+public readonly record struct Vector3D(double X, double Y, double Z) : IFormattable
 {
     /// <summary>
     /// Parses a <see cref="Vector"/> string.
@@ -142,4 +142,13 @@ public readonly record struct Vector3D(double X, double Y, double Z)
     /// Computes the Euclidean distance between the two given points.
     /// </summary>
     public static double Distance(Vector3D value1, Vector3D value2) => Math.Sqrt(DistanceSquared(value1, value2));
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        string separator = NumberFormatInfo.GetInstance(formatProvider).NumberGroupSeparator;
+        return $"<{X.ToString(format, formatProvider)}{separator} {Y.ToString(format, formatProvider)}{separator} {Z.ToString(format, formatProvider)}>";
+
+    }
+
+    public override string ToString() => ToString("G", CultureInfo.InvariantCulture);
 }

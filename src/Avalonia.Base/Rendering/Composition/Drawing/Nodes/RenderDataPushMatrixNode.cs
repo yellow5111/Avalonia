@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Avalonia.Rendering.Composition.Drawing.Nodes;
 
 class RenderDataPushMatrixNode : RenderDataPushNode
@@ -26,10 +24,4 @@ class RenderDataPushMatrixNode : RenderDataPushNode
     }
 
     public override Rect? Bounds => base.Bounds?.TransformToAABB(Matrix);
-
-    public override void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
-    {
-        properties[nameof(Bounds)] = Bounds;
-        properties[nameof(Matrix)] = Matrix;
-    }
 }

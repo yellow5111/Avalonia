@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Avalonia.Media;
 using Avalonia.Platform;
 using Avalonia.Rendering.SceneGraph;
@@ -53,6 +52,7 @@ class RenderDataLineNode : IRenderDataItemWithServerResources
 
         return Math.Abs(distance) <= halfThickness;
     }
+    
 
     public void Invoke(ref RenderDataNodeRenderContext context) 
         => context.Context.DrawLine(ServerPen, P1, P2);
@@ -61,13 +61,5 @@ class RenderDataLineNode : IRenderDataItemWithServerResources
     public void Collect(IRenderDataServerResourcesCollector collector)
     {
         collector.AddRenderDataServerResource(ServerPen);
-    }
-
-    public void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
-    {
-        properties[nameof(Bounds)] = Bounds;
-        properties[nameof(P1)] = P1;
-        properties[nameof(P2)] = P2;
-        properties[nameof(ServerPen)] = ServerPen?.ToString();
     }
 }

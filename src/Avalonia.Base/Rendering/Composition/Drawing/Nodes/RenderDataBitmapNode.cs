@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Avalonia.Platform;
 using Avalonia.Utilities;
 
@@ -25,14 +24,5 @@ class RenderDataBitmapNode : IRenderDataItem, IDisposable
     {
         Bitmap?.Dispose();
         Bitmap = null;
-    }
-
-    public void PopulateDiagnosticProperties(Dictionary<string, object?> properties)
-    {
-        properties[nameof(Bounds)] = Bounds;
-        properties[nameof(Bitmap)] = Bitmap?.Item?.ToString();
-        properties[nameof(Opacity)] = Opacity;
-        properties[nameof(SourceRect)] = SourceRect;
-        properties[nameof(DestRect)] = DestRect;
     }
 }
